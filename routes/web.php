@@ -1,5 +1,7 @@
 <?php
 
+use App\Notifications\OrderNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
 /*

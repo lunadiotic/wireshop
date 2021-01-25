@@ -95,11 +95,15 @@
                                     },
                                     // Optional
                                     onPending: function (result) {
-                                        location.reload();
+                                        window.livewire.emit('emptyCart');
+                                        window.location.href = "/shop";
                                     },
                                     // Optional
                                     onError: function (result) {
                                         location.reload();
+                                    },
+                                    onClose: function(){
+                                        window.location.href = "/shop";
                                     }
                                 });
                             });

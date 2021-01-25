@@ -3,6 +3,8 @@
 namespace App\Http\Livewire\Shop;
 
 use App\Facades\Cart;
+use App\Notifications\OrderNotification;
+use Illuminate\Support\Facades\Notification;
 use Livewire\Component;
 
 class Checkout extends Component
@@ -14,6 +16,7 @@ class Checkout extends Component
     public $address;
     public $city;
     public $postal_code;
+    public $order_id;
     public $formCheckout;
     public $snapToken;
 
@@ -24,6 +27,7 @@ class Checkout extends Component
     public function mount()
     {
         $this->formCheckout = true;
+        $this->order_id = uniqid();
     }
 
     public function render()
@@ -59,7 +63,7 @@ class Checkout extends Component
         ];
 
         $transactionDetails = [
-            'order_id' => uniqid(),
+            'order_id' => $this->order_id,
             'gross_amount' => $amount
         ];
 
@@ -86,6 +90,13 @@ class Checkout extends Component
 
     public function emptyCartHandler()
     {
+        $data = [
+            'url' => url('/invoice') . '/' . $this->order_id,
+            'order_id' => $this->order_id
+        ];
+
+        Notification::send(null, new OrderNotification($data));
+
         Cart::clear();
         $this->emit('cartClear');
     }
